@@ -4,7 +4,7 @@ import Modal from "../components/Modal";
 import { usePlayerApi } from "../api/player";
 import { useNavigate } from "react-router";
 
-function NewGame(){
+function CreateGame(){
     const navigate = useNavigate();
     const { getPlayers, createPlayer } = usePlayerApi();
 
@@ -68,15 +68,6 @@ function NewGame(){
     return (
         <>
           <Heading text="Nieuw spel" subtitle='Selecteer spelers'/>
-          <ul className="grid grid-cols-2 gap-4 pb-3 mb-3 border-b-1 border-slate-300">
-            <button className="bg-slate-400 hover:bg-slate-500 p-4 rounded-2xl text-white text-md cursor-pointer">
-                Vorige selectie
-            </button>
-            <button className="bg-slate-400 hover:bg-slate-500 p-4 rounded-2xl text-white text-md cursor-pointer" 
-                onClick={() => setSelectedPlayers([])}>
-                Deselecteer alles
-            </button>
-          </ul>
           <ul className="grid grid-cols-2 gap-4">
             {players.sort().map((player) => (
             <li key={player} className={`p-4 rounded-2xl border-l-8 bg-slate-100 cursor-pointer transition-all
@@ -89,7 +80,7 @@ function NewGame(){
                 <p className="text-xl">{player}</p>
             </li>
             ))}
-            <li className="bg-slate-400 hover:bg-slate-500 text-white p-4 pl-6 rounded-2xl cursor-pointer transition-all items-center gap-1 flex"
+            <li className="bg-emerald-500 hover:bg-emerald-600 text-white p-4 pl-6 rounded-2xl cursor-pointer transition-all items-center gap-1 flex"
             onClick={() => setIsModalOpen(true)}>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
@@ -136,4 +127,4 @@ function NewGame(){
       )
 }
 
-export default NewGame;
+export default CreateGame;
