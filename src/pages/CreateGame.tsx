@@ -70,10 +70,10 @@ function CreateGame(){
           <Heading text="Nieuw spel" subtitle='Selecteer spelers'/>
           <ul className="grid grid-cols-2 gap-4">
             {players.sort().map((player) => (
-            <li key={player} className={`p-4 rounded-2xl border-l-8 bg-slate-100 cursor-pointer transition-all
+            <li key={player} className={`p-4 rounded-2xl border-l-8 bg-white cursor-pointer transition-all
                 ${selectedPlayers.includes(player)
                     ? "border-emerald-500 text-emerald-600"
-                    : "border-slate-100 text-black"
+                    : "border-white text-black"
                 }`
             }
                 onClick={() => togglePlayer(player)}>

@@ -23,6 +23,8 @@ export default function Game(){
     // Ranked players go into slots by index
     const [ranked, setRanked] = useState<(string | null)[]>(new Array(selectedPlayers.length).fill(null));
 
+    const saveable = !ranked.includes(null);
+
     const handleDragEnd = ({ active, over }: DragEndEvent) => {
         if (!over) return;
 
@@ -83,22 +85,27 @@ export default function Game(){
         <>
             <Heading text="Potje 45" subtitle="Selecteer uitkomst"/>
             <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
-                <div className="flex gap-8">
-                    {/* Left: Unranked players */}
-                    <div className="w-1/2 p-4 border rounded-md bg-gray-50">
-                    <h3 className="mb-2 font-semibold">Players</h3>
-                    {unranked.map((name) => (
-                        <DraggablePlayer key={name} name={name} onClick={() => rankPlayerInNextSlot(name)}/>
-                    ))}
+                <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-1">
+                        {ranked.map((player, index) => (
+                            <RankingSlot key={index} index={index} player={player} onClick={handleSlotClick} />
+                        ))}
                     </div>
 
-                    {/* Right: Ranking slots */}
-                    <div className="w-1/2 p-4 border rounded-md bg-gray-50">
-                    <h3 className="mb-2 font-semibold">Rankings</h3>
-                    {ranked.map((player, index) => (
-                        <RankingSlot key={index} index={index} player={player} onClick={handleSlotClick} />
-                    ))}
+                    <div className="flex flex-wrap gap-2">
+                        {unranked.map((name) => (
+                            <DraggablePlayer key={name} name={name} onClick={() => rankPlayerInNextSlot(name)}/>
+                        ))}
                     </div>
+                </div>
+                <div className="flex flex-col gap-4 mt-4">
+                    <button className={`p4 py-4 w-full text-2xl rounded-2xl transition-all ${
+                        saveable
+                            ? "bg-emerald-500 text-white hover:bg-emerald-600"
+                            : "bg-gray-300 text-gray-600 cursor-not-allowed"
+                        }`}>
+                        Sla op
+                    </button>
                 </div>
             </DndContext>
         </>

@@ -18,9 +18,9 @@ const DraggablePlayer: React.FC<{ name: string, onClick: () => void }> = ({ name
       {...listeners}
       style={style}
       onClick={onClick}
-      className="px-4 py-2 border rounded-md bg-white mb-2 cursor-grab select-none touch-none"
+      className="px-4 py-2 rounded-xl bg-white mb-2 cursor-grab select-none touch-none"
     >
-      {name}
+      <p className="text-xl">{name}</p>
     </div>
   );
 };
