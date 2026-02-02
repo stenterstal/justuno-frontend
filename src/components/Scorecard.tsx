@@ -8,7 +8,7 @@ export default function Scorecard({name, ranking, matches, won, weighted_avg}: S
     }[ranking] ?? "border-white";
 
     return (
-        <div className={`p-4 md:p-5 mt-4 mb-4 rounded-2xl bg-white flex items-center border-l-8 ${borderColorClass}`}>
+        <div className={`p-4 md:p-5 mb-4 rounded-2xl bg-white flex items-center border-l-8 ${borderColorClass}`}>
             <h1 className="text-2xl md:text-3xl pr-6">{name}</h1>
             <div className="flex flex-col flex-1">
                 <p className="text-sm md:text-base">Gespeeld: {matches}</p>

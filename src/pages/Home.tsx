@@ -1,10 +1,23 @@
-import { use, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Scorecard from '../components/Scorecard'
 import { useNavigate } from 'react-router'
 import Heading from '../components/Heading'
+import { useLeaderboardApi } from '../api/leaderboard'
 
 function Scores() {
   const navigate = useNavigate()
+  const useLeaderboard = useLeaderboardApi()
+
+  useEffect(() => {
+    const getLeaderboard = async () => {
+      const leaderboard = await useLeaderboard.getLeaderboard({start: "2026-02-01", end: "2026-02-28"})
+
+      console.log(leaderboard.data)
+    }
+
+    getLeaderboard()
+  }, [])
+
   const [rankings, setRankings] = useState([
     {
       "name": "Sten",

@@ -9,6 +9,7 @@ interface ApiOptions {
   body?: unknown;
 }
 
+// Custom hook around apiFetch that can automatically receive token from AuthProvider
 export function useApi() {
   const { token } = useAuth();
 

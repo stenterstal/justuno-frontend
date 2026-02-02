@@ -83,7 +83,7 @@ export default function Game(){
 
     return(
         <>
-            <Heading text="Potje 45" subtitle="Selecteer uitkomst"/>
+            <Heading text="Selecteer uitkomst"/>
             <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
                 <div className="flex flex-col gap-2">
                     <div className="flex flex-col gap-1">
