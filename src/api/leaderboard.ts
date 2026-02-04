@@ -24,5 +24,12 @@ export function useLeaderboardApi() {
     );
   };
 
-  return { getLeaderboard };
+  const getLeaderboardDates = () => {
+    return apiFetch<{min: string, max: string}>(
+      '/games/dates/',
+      { method: "GET" }
+    );
+  }
+
+  return { getLeaderboard, getLeaderboardDates };
 }
