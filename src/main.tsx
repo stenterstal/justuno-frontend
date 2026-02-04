@@ -9,6 +9,7 @@ import Login from './pages/Login.tsx';
 import { AuthProvider } from './auth/AuthProvider.tsx';
 import ProtectedLayout from './auth/ProtectedLayout.tsx';
 import Game from './pages/Game.tsx';
+import GameResult from './pages/GameResult.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -17,13 +18,14 @@ createRoot(document.getElementById('root')!).render(
         <Routes>
           {/* Always accessible */}
           <Route element={<Layout />}>
-            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
           </Route>
           {/* Authenticated routes */}
           <Route element={<ProtectedLayout/>}>
+            <Route path="/" element={<Home />} />
             <Route path="/new" element={<CreateGame />} />
             <Route path="/game" element={<Game />} />
+            <Route path="/result" element={<GameResult />} />
           </Route>
         </Routes>
         </AuthProvider>

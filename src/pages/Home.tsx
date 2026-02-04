@@ -1,66 +1,42 @@
 import { useEffect, useState } from 'react'
 import Scorecard from '../components/Scorecard'
-import { useNavigate } from 'react-router'
 import Heading from '../components/Heading'
 import { useLeaderboardApi } from '../api/leaderboard'
+import type LeaderboardEntry from '../types/LeaderboardEntry'
+import BottomBar from '../components/BottomBar'
 
 function Scores() {
-  const navigate = useNavigate()
   const useLeaderboard = useLeaderboardApi()
+
+  const [rankings, setRankings] = useState<LeaderboardEntry[]>()
 
   useEffect(() => {
     const getLeaderboard = async () => {
-      const leaderboard = await useLeaderboard.getLeaderboard({start: "2026-02-01", end: "2026-02-28"})
+      const response = await useLeaderboard.getLeaderboard({start: "2026-02-01", end: "2026-02-28"})
 
-      console.log(leaderboard.data)
+      if(response.ok){
+         setRankings(response.data)
+      }
+      // TODO: Error
     }
 
     getLeaderboard()
   }, [])
 
-  const [rankings, setRankings] = useState([
-    {
-      "name": "Sten",
-      "ranking": 1,
-      "matches": 14,
-      "won": 3,
-      "weighted_avg": 2.1
-    },
-    {
-      "name": "Stan",
-      "ranking": 2,
-      "matches": 8,
-      "won": 2,
-      "weighted_avg": 2.9
-    },
-    {
-      "name": "Atiye",
-      "ranking": 3,
-      "matches": 4,
-      "won": 1,
-      "weighted_avg": 3.4
-    },
-    {
-      "name": "Ellen",
-      "ranking": 4,
-      "matches": 19,
-      "won": 2,
-      "weighted_avg": 3.8
-    }
-  ])
 
   return (
     <>
-      <Heading text="Stand" subtitle='Deze maand - Gemiddelde plaats'/>
-      <div className="scores">
-        {rankings.map((ranking, index) => (
-          <Scorecard {...ranking} key={index} />
+      {rankings && rankings?.length > 1 ?
+        <Heading text="Stand"/>
+        :
+        <Heading text="Stand" subtitle='Geen gespeelde potjes'/>
+      }
+      <div className="scores mb-20">
+        {rankings?.map((ranking) => (
+          <Scorecard {...ranking} key={ranking.position}/>
         ))}
       </div>
-      <button onClick={() => navigate('/new')}
-        className='bg-emerald-500 hover:bg-emerald-600 rounded-xl text-white fixed bottom-6 right-6 py-4 px-8 cursor-pointer'>
-        Nieuw spel
-      </button>
+      <BottomBar/>
     </>
   )
 }

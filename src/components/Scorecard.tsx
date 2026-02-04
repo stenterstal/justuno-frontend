@@ -1,20 +1,20 @@
-import type {Scorecard as ScorecardProps} from "../types/Scorecard";
+import type LeaderboardEntry from "../types/LeaderboardEntry";
 
-export default function Scorecard({name, ranking, matches, won, weighted_avg}: ScorecardProps) {
+export default function Scorecard({player, games_played, games_won, final_score, position}: LeaderboardEntry) {
     const borderColorClass = {
         1: "border-yellow-400",
         2: "border-gray-400",
         3: "border-amber-700",
-    }[ranking] ?? "border-white";
+    }[position] ?? "border-white";
 
     return (
         <div className={`p-4 md:p-5 mb-4 rounded-2xl bg-white flex items-center border-l-8 ${borderColorClass}`}>
-            <h1 className="text-2xl md:text-3xl pr-6">{name}</h1>
-            <div className="flex flex-col flex-1">
-                <p className="text-sm md:text-base">Gespeeld: {matches}</p>
-                <p className="text-sm md:text-base">Gewonnen: {won}</p>
+            <h1 className="text-2xl md:text-3xl pr-6 flex-1 min-w-0 text-wrap overflow-hidden text-ellipsis">{player}</h1>
+            <div className="flex flex-col min-w-12">
+                <p className="text md:text-base">🃏 {games_played}</p>
+                <p className="text md:text-base">🏆 {games_won}</p>
             </div>
-            <p className="text-2xl md:text-3xl">{weighted_avg}</p>
+            <p className="text-2xl md:text-3xl min-w-18 md:min-w-26 text-end">{final_score}</p>
         </div>
     )
 }

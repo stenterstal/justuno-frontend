@@ -2,14 +2,15 @@ import { useEffect, useState } from "react";
 import Heading from "../components/Heading";
 import Modal from "../components/Modal";
 import { usePlayerApi } from "../api/player";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 function CreateGame(){
     const navigate = useNavigate();
+    const location = useLocation();
     const { getPlayers, createPlayer } = usePlayerApi();
 
     const [players, setPlayers] = useState<string[]>([])
-    const [selectedPlayers, setSelectedPlayers] = useState<string[]>([]);
+    const [selectedPlayers, setSelectedPlayers] = useState<string[]>(location.state?.players || []);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [newPlayerName, setNewPlayerName] = useState<string>("");
 

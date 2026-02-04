@@ -4,11 +4,13 @@ import { DndContext, type DragEndEvent, PointerSensor, useSensor, useSensors} fr
 import { useState } from "react";
 import DraggablePlayer from "../components/DraggablePlayer";
 import RankingSlot from "../components/RankingSlot";
+import { useGameApi } from "../api/game";
 
 
 export default function Game(){
     const navigate = useNavigate();
     const location = useLocation();
+    const { createGame } = useGameApi();
     const { selectedPlayers } = location.state || {};
     // const selectedPlayers = ["Atiye", "Edwin", "Sasha"]
 
@@ -24,6 +26,24 @@ export default function Game(){
     const [ranked, setRanked] = useState<(string | null)[]>(new Array(selectedPlayers.length).fill(null));
 
     const saveable = !ranked.includes(null);
+
+    const submitGame = async () => {
+        const payload = {
+            results: ranked.map((player, index) => ({
+                player,
+                position: index + 1, // index is 0-based, positions are 1-based
+            })),
+        };
+        await createGame(payload).then((response) => {
+            if(response.ok){
+                navigate('/result', {state: {
+                    players: selectedPlayers,
+                    mutations: response.data.leaderboard_mutations
+                }})
+            }
+            // TODO: Error handling
+        })
+    }
 
     const handleDragEnd = ({ active, over }: DragEndEvent) => {
         if (!over) return;
@@ -60,7 +80,6 @@ export default function Game(){
     };
 
     const rankPlayerInNextSlot = (name: string) => {
-        console.log(name)
         const slotIndex = ranked.findIndex((slot) => slot === null);
         if (slotIndex === -1) return; // all slots filled
 
@@ -99,7 +118,10 @@ export default function Game(){
                     </div>
                 </div>
                 <div className="flex flex-col gap-4 mt-4">
-                    <button className={`p4 py-4 w-full text-2xl rounded-2xl transition-all ${
+                    <button 
+                    onClick={() => submitGame()}
+                    disabled={!saveable}
+                    className={`p4 py-4 w-full text-2xl rounded-2xl transition-all ${
                         saveable
                             ? "bg-emerald-500 text-white hover:bg-emerald-600"
                             : "bg-gray-300 text-gray-600 cursor-not-allowed"
