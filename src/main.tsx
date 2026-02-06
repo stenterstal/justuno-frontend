@@ -10,6 +10,7 @@ import { AuthProvider } from './auth/AuthProvider.tsx';
 import ProtectedLayout from './auth/ProtectedLayout.tsx';
 import Game from './pages/Game.tsx';
 import GameResult from './pages/GameResult.tsx';
+import ScoreInfo from './pages/ScoreInfo.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -26,6 +27,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="/new" element={<CreateGame />} />
             <Route path="/game" element={<Game />} />
             <Route path="/result" element={<GameResult />} />
+            <Route path="/info" element={<ScoreInfo />} />
           </Route>
         </Routes>
         </AuthProvider>

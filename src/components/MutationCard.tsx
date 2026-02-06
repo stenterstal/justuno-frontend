@@ -29,19 +29,26 @@ function MutationInfo({ delta }: { delta: number }){
     )
 }
 
-export default function MutationCard({player, old_position, new_position, delta}: LeaderboardMutation) {
+interface MutationCardProps {
+    mutation: LeaderboardMutation
+    players: string[]
+}
+
+export default function MutationCard({mutation, players}: MutationCardProps) {
     const borderColorClass = {
-        1: "border-yellow-400",
-        2: "border-gray-400",
-        3: "border-amber-700",
-    }[new_position] ?? "border-white";
+        1: "border-l-8 border-yellow-400",
+        2: "border-l-8 border-gray-400",
+        3: "border-l-8 border-amber-700",
+    }[mutation.new_position] ?? "border-white";
 
     return (
-        <div className={`p-4 md:p-5 mb-4 rounded-2xl bg-white flex items-center border-l-8 ${borderColorClass}`}>
-            <h1 className="text-2xl md:text-3xl pr-6 flex-1 min-w-0 text-wrap overflow-hidden text-ellipsis">{player}</h1>
+        <div className={`p-4 md:p-5 mb-4 rounded-2xl flex items-center ${borderColorClass} ${
+            players.includes(mutation.player) ? 'bg-white' : 'bg-slate-100'
+            }`}>
+            <h1 className="text-2xl md:text-3xl pr-6 flex-1 min-w-0 text-wrap overflow-hidden text-ellipsis">{mutation.player}</h1>
             <div className="flex">
-                <MutationInfo delta={delta}/>
-                <p className="text-1xl md:text-2xl min-w-18 md:min-w-26 text-end">Plek {new_position}</p>
+                <MutationInfo delta={mutation.delta}/>
+                <p className="text-1xl md:text-2xl min-w-18 md:min-w-26 text-end">Plek {mutation.new_position}</p>
             </div>
         </div>
     )

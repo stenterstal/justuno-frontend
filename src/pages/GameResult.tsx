@@ -17,7 +17,7 @@ export default function GameResult(){
             {mutations &&
                 <div>
                     {mutations.map((mutation: LeaderboardMutation) => (
-                        <MutationCard {...mutation}/>
+                        <MutationCard mutation={mutation} players={players}/>
                     ))}
                 </div>
             }

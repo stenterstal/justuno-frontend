@@ -71,10 +71,10 @@ function CreateGame(){
           <Heading text="Nieuw spel" subtitle='Selecteer spelers'/>
           <ul className="grid grid-cols-2 gap-4">
             {players.sort().map((player) => (
-            <li key={player} className={`p-4 rounded-2xl border-l-8 bg-white cursor-pointer transition-all
+            <li key={player} className={`p-4 rounded-2xl cursor-pointer transition-all overflow-hidden
                 ${selectedPlayers.includes(player)
-                    ? "border-emerald-500 text-emerald-600"
-                    : "border-white text-black"
+                    ? "bg-emerald-500 text-white"
+                    : "bg-white text-black"
                 }`
             }
                 onClick={() => togglePlayer(player)}>
@@ -85,7 +85,7 @@ function CreateGame(){
           <div className="grid grid-cols-2 gap-4 mt-8">
             <button className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white p-4 pl-6 rounded-2xl cursor-pointer transition-all items-center gap-1 flex justify-center"
               onClick={() => setIsModalOpen(true)}>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 -ml-2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
                 </svg>
                 <p className="text-xl">

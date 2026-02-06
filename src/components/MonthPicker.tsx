@@ -18,6 +18,10 @@ const generateMonths = (minDate: Date, maxDate: Date): Date[] => {
   return months;
 };
 
+function capitalizeFirstLetter(str: string) {
+  return str[0].toUpperCase() + str.slice(1);
+}
+
 function parseDate(date: string) {
   const [year, month] = date.split('-').map(Number);
   return new Date(year, month - 1, 1); // month is 0-indexed
@@ -40,14 +44,14 @@ const MonthPicker: React.FC<MonthPickerProps> = ({ minDate, maxDate, onChange })
     <select
       value={`${selectedMonth.getFullYear()}-${selectedMonth.getMonth()}`}
       onChange={handleChange}
-      className="outline-none"
+      className="outline-none capitalize"
     >
       {months.map((date) => (
         <option
           key={`${date.getFullYear()}-${date.getMonth()}`}
           value={`${date.getFullYear()}-${date.getMonth()}`}
         >
-          {date.toLocaleString("nl-NL", { month: "long", year: "numeric" })}
+          {capitalizeFirstLetter(date.toLocaleString("nl-NL", { month: "long", year: "numeric" }))}
         </option>
       ))}
     </select>
