@@ -11,6 +11,7 @@ import ProtectedLayout from './auth/ProtectedLayout.tsx';
 import Game from './pages/Game.tsx';
 import GameResult from './pages/GameResult.tsx';
 import ScoreInfo from './pages/ScoreInfo.tsx';
+import Player from './pages/Player.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -28,6 +29,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="/game" element={<Game />} />
             <Route path="/result" element={<GameResult />} />
             <Route path="/info" element={<ScoreInfo />} />
+            <Route path="/user/:id" element={<Player />} />
           </Route>
         </Routes>
         </AuthProvider>

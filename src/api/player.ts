@@ -1,12 +1,19 @@
 import { useApi } from "../lib/useApiFetch";
 import type Player from "../types/Player";
 import type { ApiResponse } from "../types/ApiReponse";
+import type PlayerGame from "../types/PlayerGame";
 
 export function usePlayerApi() {
   const apiFetch = useApi();
 
   const getPlayers = (): Promise<ApiResponse<Player[]>> => {
     return apiFetch<Player[]>("/players/", {
+      method: "GET",
+    });
+  };
+
+  const getPlayerGames = (name: string): Promise<ApiResponse<PlayerGame[]>> => {
+    return apiFetch<PlayerGame[]>("/games/"+name, {
       method: "GET",
     });
   };
@@ -18,5 +25,5 @@ export function usePlayerApi() {
     });
   };
 
-  return { getPlayers, createPlayer };
+  return { getPlayers, getPlayerGames, createPlayer };
 }

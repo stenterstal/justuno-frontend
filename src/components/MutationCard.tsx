@@ -23,7 +23,7 @@ function MutationIcon({ delta }: { delta: number }){
 function MutationInfo({ delta }: { delta: number }){
     return (
         <>
-            <p>{delta}</p>
+            <p>{delta === 0 ? "-" : delta}</p>
             <MutationIcon delta={delta}/>
         </>
     )
