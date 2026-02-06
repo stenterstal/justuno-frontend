@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router"
 import MonthPicker from "./MonthPicker"
-import { use, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useLeaderboardApi } from "../api/leaderboard"
 
 export default function BottomBar(){
