@@ -1,4 +1,4 @@
-import { useApi } from "../lib/useApiFetch";
+import { apiFetch } from "../lib/apiClient";
 import type { ApiResponse } from "../types/ApiReponse";
 
 interface GameResult {
@@ -17,23 +17,19 @@ interface LeaderboardMutation {
   delta: number;
 }
 
-// Adjust this if your backend returns something specific
 type CreateGameResponse = {
   player_count: number;
-  leaderboard_mutations: LeaderboardMutation[]
-}
+  leaderboard_mutations: LeaderboardMutation[];
+};
 
 export function useGameApi() {
-  const apiFetch = useApi();
-
   const createGame = (
     payload: CreateGamePayload
-  ): Promise<ApiResponse<CreateGameResponse>> => {
-    return apiFetch<CreateGameResponse>("/games/", {
+  ): Promise<ApiResponse<CreateGameResponse>> =>
+    apiFetch<CreateGameResponse>("/games/", {
       method: "POST",
       body: payload,
     });
-  };
 
   return { createGame };
 }

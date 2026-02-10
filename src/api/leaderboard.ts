@@ -1,4 +1,5 @@
-import { useApi } from "../lib/useApiFetch";
+// src/api/leaderboardApi.ts
+import { apiFetch } from "../lib/apiClient";
 import type LeaderboardEntry from "../types/LeaderboardEntry";
 import type { ApiResponse } from "../types/ApiReponse";
 
@@ -8,8 +9,6 @@ interface LeaderboardParams {
 }
 
 export function useLeaderboardApi() {
-  const apiFetch = useApi();
-
   const getLeaderboard = (
     params: LeaderboardParams
   ): Promise<ApiResponse<LeaderboardEntry[]>> => {
@@ -24,12 +23,12 @@ export function useLeaderboardApi() {
     );
   };
 
-  const getLeaderboardDates = () => {
-    return apiFetch<{min: string, max: string}>(
-      '/games/dates/',
+  const getLeaderboardDates = (): Promise<ApiResponse<{ min: string; max: string }>> => {
+    return apiFetch<{ min: string; max: string }>(
+      "/games/dates/",
       { method: "GET" }
     );
-  }
+  };
 
   return { getLeaderboard, getLeaderboardDates };
 }

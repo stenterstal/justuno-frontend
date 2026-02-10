@@ -2,7 +2,7 @@ import { useState } from "react";
 import Heading from "../components/Heading";
 import { useAuth } from "../auth/AuthProvider";
 import { useLocation, useNavigate } from "react-router";
-import { loginRequest } from "../api/login";
+import { Navigate } from "react-router";
 
 export default function Login(){
     const [username, setUsername] = useState("");
@@ -10,35 +10,26 @@ export default function Login(){
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const { login } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    const { login, isAuthenticated } = useAuth();
+
+    if(isAuthenticated){
+        return <Navigate to="/" replace />;
+    }
 
     const from = (location.state as any)?.from?.pathname || "/";
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
 
-        try {
-            const response = await loginRequest(username, password)
-
-            if (response.status == 400) {
-                setError("Onjuiste credentials")
-                throw new Error("Login failed");
+        login(username, password).then((ok) => {
+            if(ok){
+                navigate(from, { replace: true });
+            } else {
+                 setError("Login failed")
             }
-
-            if (!response.ok) {
-                setError("Login faalde om onbekende reden")
-                throw new Error("Login failed");
-            }
-
-            login(response.data.token)
-            navigate(from, { replace: true });
-
-        } catch (err: any) {
-            setError("Onbekende error tijdens inloggen")
-            console.error(err);
-        }
+        })
     };
 
     return(
