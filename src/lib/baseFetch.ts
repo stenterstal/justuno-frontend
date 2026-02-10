@@ -13,6 +13,10 @@ function normalizeEndpoint(endpoint: string): string {
 function buildUrl(base: string, endpoint: string) {
   const normalizedEndpoint = normalizeEndpoint(endpoint);
 
+  if(!base || base === "/"){
+    base = window.location.origin
+  }
+
   const baseUrl = base.replace(/\/+$/, "") + "/";
   const url = new URL(normalizedEndpoint, baseUrl);
 
