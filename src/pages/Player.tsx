@@ -33,7 +33,7 @@ export default function Player(){
                 </NavLink>
             }/>
             {games.map((game) => (
-                <ResultCard {...game}/>
+                <ResultCard {...game} key={game.played_at}/>
             ))}
         </>
     )

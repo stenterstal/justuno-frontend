@@ -2,9 +2,11 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { refreshSession } from "../api/auth";
 import { baseFetch } from "../lib/baseFetch";
+import Layout from "../components/Layout";
 
 interface AuthContextType {
   isAuthenticated: boolean;
+  loaded: boolean;
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
   refresh: () => Promise<boolean>;
@@ -18,11 +20,13 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   // Attempt refresh on app load
   useEffect(() => {
     refreshSession().then((result) => {
       setIsAuthenticated(result)
+      setLoaded(true)
     });
   }, []);
 
@@ -63,7 +67,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, login, logout, refresh }}
+      value={{ isAuthenticated, loaded, login, logout, refresh }}
     >
       {children}
     </AuthContext.Provider>
