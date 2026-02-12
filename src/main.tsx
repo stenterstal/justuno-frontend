@@ -1,20 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter, Routes, Route, RouterProvider, createBrowserRouter } from "react-router";
-import './index.css'
-import Home from './pages/Home.tsx'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { RouterProvider, createBrowserRouter } from "react-router";
+import { redirectIfAuthenticated } from './auth/redirectIfAuthenticated.ts';
+import { requireAuth } from './auth/requireAuth.ts';
 import Layout from './components/Layout.tsx';
+import './index.css';
+import { createGameLoader } from './loaders/createGameLoader.ts';
+import { homepageLoader } from './loaders/homepageLoader.ts';
+import { playerLoader } from './loaders/playerLoader.ts';
 import CreateGame from './pages/CreateGame.tsx';
-import Login from './pages/Login.tsx';
 import Game from './pages/Game.tsx';
 import GameResult from './pages/GameResult.tsx';
-import ScoreInfo from './pages/ScoreInfo.tsx';
+import Home from './pages/Home.tsx';
+import Login from './pages/Login.tsx';
 import Player from './pages/Player.tsx';
-import { requireAuth } from './auth/requireAuth.ts';
-import { redirectIfAuthenticated } from './auth/redirectIfAuthenticated.ts';
-import { homepageLoader } from './loaders/homepageLoader.ts';
-import { createGameLoader } from './loaders/createGameLoader.ts';
-import { playerLoader } from './loaders/playerLoader.ts';
+import ScoreInfo from './pages/ScoreInfo.tsx';
 
 
 const router = createBrowserRouter([
