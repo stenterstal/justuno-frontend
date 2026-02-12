@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Heading from "../components/Heading";
 import { useLocation, useNavigate } from "react-router";
-import { Navigate } from "react-router";
 import { login } from "../api/auth";
+import Heading from "../components/Heading";
+
 
 export default function Login(){
     const [username, setUsername] = useState("");

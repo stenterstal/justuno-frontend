@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useLoaderData, useLocation, useNavigate } from "react-router";
+import { playerApi } from "../api/player";
 import Heading from "../components/Heading";
 import Modal from "../components/Modal";
-import { playerApi } from "../api/player";
-import { useLoaderData, useLocation, useNavigate } from "react-router";
 import type Player from "../types/Player";
+
 
 function CreateGame(){
     const navigate = useNavigate();
