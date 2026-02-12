@@ -12,11 +12,6 @@ export default function Login(){
 
     const navigate = useNavigate();
     const location = useLocation();
-    // const { login, isAuthenticated } = useAuth();
-
-    // if(isAuthenticated){
-    //     return <Navigate to="/" replace />;
-    // }
 
     const from = (location.state as any)?.from?.pathname || "/";
 
