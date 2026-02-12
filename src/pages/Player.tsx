@@ -1,26 +1,11 @@
-import { NavLink, useParams } from 'react-router';
+import { NavLink, useLoaderData, useParams } from 'react-router';
 import Heading from '../components/Heading';
-import { useEffect, useState } from 'react';
-import { usePlayerApi } from '../api/player';
 import type PlayerGame from '../types/PlayerGame';
 import ResultCard from '../components/ResultCard';
 
 export default function Player(){
     const { id } = useParams();
-    const playerApi = usePlayerApi();
-    const [games, setGames] = useState<PlayerGame[]>([]);
-
-    useEffect(() => {
-        const getPlayerGames = async () => {
-            playerApi.getPlayerGames(id as string).then((response) => {
-                if(response.ok){
-                    setGames(response.data)
-                }
-            })
-        }
-
-        getPlayerGames();
-    }, [])
+    const games = useLoaderData() as PlayerGame[];
 
     return (
         <>

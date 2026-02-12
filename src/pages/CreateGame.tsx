@@ -1,30 +1,22 @@
 import { useEffect, useState } from "react";
 import Heading from "../components/Heading";
 import Modal from "../components/Modal";
-import { usePlayerApi } from "../api/player";
-import { useLocation, useNavigate } from "react-router";
+import { playerApi } from "../api/player";
+import { useLoaderData, useLocation, useNavigate } from "react-router";
+import type Player from "../types/Player";
 
 function CreateGame(){
     const navigate = useNavigate();
     const location = useLocation();
-    const { getPlayers, createPlayer } = usePlayerApi();
+    const loadedPlayers = useLoaderData() as Player[];
 
-    const [players, setPlayers] = useState<string[]>([])
+    const [players, setPlayers] = useState<string[]>(loadedPlayers.map((p) => p.name))
     const [selectedPlayers, setSelectedPlayers] = useState<string[]>(location.state?.players || []);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [newPlayerName, setNewPlayerName] = useState<string>("");
 
     const hasEnoughPlayers = selectedPlayers.length >= 2;
 
-    useEffect(() => {
-      const fetchPlayers = async () => {
-        const response = await getPlayers();
-        if(response.ok){
-          setPlayers(response.data.map(player => player.name))
-        }
-      }
-      fetchPlayers();
-    }, [])
 
     const togglePlayer = (playerName: string) => {
       setSelectedPlayers((prevSelected) =>
@@ -39,7 +31,7 @@ function CreateGame(){
         e.preventDefault();
 
         try {
-            const response = await createPlayer(newPlayerName)
+            const response = await playerApi.createPlayer(newPlayerName)
 
             if (response.status == 400) {
                 // setError("Onjuiste credentials")

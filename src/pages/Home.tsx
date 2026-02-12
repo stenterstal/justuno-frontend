@@ -1,29 +1,14 @@
-import { useEffect, useState } from 'react'
 import Scorecard from '../components/Scorecard'
 import Heading from '../components/Heading'
-import { useLeaderboardApi } from '../api/leaderboard'
 import type LeaderboardEntry from '../types/LeaderboardEntry'
 import BottomBar from '../components/BottomBar'
-import { NavLink } from 'react-router'
+import { NavLink, useLoaderData } from 'react-router'
 
 function Scores() {
-  const useLeaderboard = useLeaderboardApi()
-
-  const [rankings, setRankings] = useState<LeaderboardEntry[]>([])
-
-  useEffect(() => {
-    const getLeaderboard = async () => {
-      const response = await useLeaderboard.getLeaderboard({start: "2026-02-01", end: "2026-02-28"})
-
-      if(response.ok){
-         setRankings(response.data)
-      }
-      // TODO: Error
-    }
-
-    getLeaderboard()
-  }, [])
-
+  const { rankings, dates } = useLoaderData() as {
+    rankings: LeaderboardEntry[];
+    dates: {min: string, max: string}
+  };
 
   return (
     <>
@@ -40,7 +25,7 @@ function Scores() {
           <Scorecard {...ranking} key={ranking.position}/>
         ))}
       </div>
-      <BottomBar/>
+      <BottomBar {...dates} />
     </>
   )
 }

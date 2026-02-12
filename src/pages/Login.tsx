@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Heading from "../components/Heading";
-import { useAuth } from "../auth/AuthProvider";
 import { useLocation, useNavigate } from "react-router";
 import { Navigate } from "react-router";
+import { login } from "../api/auth";
 
 export default function Login(){
     const [username, setUsername] = useState("");
@@ -12,11 +12,11 @@ export default function Login(){
 
     const navigate = useNavigate();
     const location = useLocation();
-    const { login, isAuthenticated } = useAuth();
+    // const { login, isAuthenticated } = useAuth();
 
-    if(isAuthenticated){
-        return <Navigate to="/" replace />;
-    }
+    // if(isAuthenticated){
+    //     return <Navigate to="/" replace />;
+    // }
 
     const from = (location.state as any)?.from?.pathname || "/";
 

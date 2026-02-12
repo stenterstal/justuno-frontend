@@ -1,34 +1,27 @@
-// src/api/leaderboardApi.ts
 import { apiFetch } from "../lib/apiClient";
 import type LeaderboardEntry from "../types/LeaderboardEntry";
-import type { ApiResponse } from "../types/ApiReponse";
 
-interface LeaderboardParams {
-  start: string; // YYYY-MM-DD
-  end: string;   // YYYY-MM-DD
+export async function getLeaderboard(start: string, end: string): Promise<LeaderboardEntry[]> {
+  const query = new URLSearchParams({ start, end });
+
+  const res = await apiFetch<LeaderboardEntry[]>(`/leaderboard/?${query.toString()}`, { method: "GET" });
+
+  if (!res.ok) {
+    throw new Response("Failed to load leaderboard", { status: res.status || 500 });
+  }
+
+  return res.data;
 }
 
-export function useLeaderboardApi() {
-  const getLeaderboard = (
-    params: LeaderboardParams
-  ): Promise<ApiResponse<LeaderboardEntry[]>> => {
-    const query = new URLSearchParams({
-      start: params.start,
-      end: params.end,
-    });
+export async function getLeaderboardDates(): Promise<{min: string, max: string}> {
+  const res = await apiFetch<{ min: string; max: string }>(
+    "/games/dates/",
+    { method: "GET" }
+  );
 
-    return apiFetch<LeaderboardEntry[]>(
-      `/leaderboard/?${query.toString()}`,
-      { method: "GET" }
-    );
-  };
+  if (!res.ok) {
+    throw new Response("Failed to load leaderboard", { status: res.status || 500 });
+  }
 
-  const getLeaderboardDates = (): Promise<ApiResponse<{ min: string; max: string }>> => {
-    return apiFetch<{ min: string; max: string }>(
-      "/games/dates/",
-      { method: "GET" }
-    );
-  };
-
-  return { getLeaderboard, getLeaderboardDates };
+  return res.data;
 }
