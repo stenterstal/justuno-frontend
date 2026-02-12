@@ -1,4 +1,3 @@
-// src/api/playerApi.ts
 import { apiFetch } from "../lib/apiClient";
 import type Player from "../types/Player";
 import type PlayerGame from "../types/PlayerGame";

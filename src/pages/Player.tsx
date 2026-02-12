@@ -1,7 +1,7 @@
 import { NavLink, useLoaderData, useParams } from 'react-router';
 import Heading from '../components/Heading';
-import type PlayerGame from '../types/PlayerGame';
 import ResultCard from '../components/ResultCard';
+import type PlayerGame from '../types/PlayerGame';
 
 export default function Player(){
     const { id } = useParams();

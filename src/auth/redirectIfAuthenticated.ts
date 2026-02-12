@@ -1,4 +1,3 @@
-// utils/redirectIfAuthenticated.ts
 import { redirect } from "react-router";
 import { refreshSession } from "../api/auth";
 
