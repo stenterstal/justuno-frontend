@@ -3,7 +3,6 @@ import type Player from "../types/Player";
 import type PlayerGame from "../types/PlayerGame";
 import type { ApiResponse } from "../types/ApiReponse";
 
-// plain object with functions
 export const playerApi = {
   getPlayers(): Promise<ApiResponse<Player[]>> {
     return apiFetch<Player[]>("/players/", { method: "GET" });
