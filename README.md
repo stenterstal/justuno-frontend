@@ -5,6 +5,9 @@
   </p>
   <p>
     <img src="https://github.com/stenterstal/justuno-frontend/actions/workflows/docker.yaml/badge.svg">
+    <a href="https://github.com/stenterstal/justuno-frontend/pkgs/container/justuno-frontend">
+      <img src="https://img.shields.io/badge/ghcr-justuno--frontend-blue?logo=github" />
+    </a>
   </p>
 </div>
 
