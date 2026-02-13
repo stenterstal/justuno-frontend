@@ -28,6 +28,11 @@ function parseDate(date: string) {
 }
 
 const MonthPicker: React.FC<MonthPickerProps> = ({ minDate, maxDate, onChange }) => {
+  // If there are no played games then there is also no min/max date
+  if(minDate == null || maxDate == null){
+    return <></>
+  }
+
   const months = generateMonths(parseDate(minDate), parseDate(maxDate));
   const [selectedMonth, setSelectedMonth] = useState<Date>(months[0]);
 
