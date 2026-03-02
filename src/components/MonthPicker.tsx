@@ -1,4 +1,5 @@
 import React, { useState, type ChangeEvent } from "react";
+import { useNavigate } from "react-router";
 
 interface MonthPickerProps {
   minDate: string;
@@ -28,13 +29,14 @@ function parseDate(date: string) {
 }
 
 const MonthPicker: React.FC<MonthPickerProps> = ({ minDate, maxDate, onChange }) => {
+  const navigate = useNavigate()
   // If there are no played games then there is also no min/max date
   if(minDate == null || maxDate == null){
     return <></>
   }
 
   const months = generateMonths(parseDate(minDate), parseDate(maxDate));
-  const [selectedMonth, setSelectedMonth] = useState<Date>(months[0]);
+  const [selectedMonth, setSelectedMonth] = useState<Date>(months.at(-1) || months[0]);
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const [yearStr, monthStr] = e.target.value.split("-");
@@ -43,6 +45,10 @@ const MonthPicker: React.FC<MonthPickerProps> = ({ minDate, maxDate, onChange })
     const newDate = new Date(year, month, 1);
     setSelectedMonth(newDate);
     onChange?.(newDate);
+
+    const yyyy = newDate.getFullYear();
+    const mm = String(newDate.getMonth() + 1).padStart(2, "0");
+    navigate(`/${yyyy}-${mm}`);
   };
 
   return (

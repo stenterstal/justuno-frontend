@@ -29,7 +29,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     loader: requireAuth,
     children: [
-      { path: "/", element: <Home />, loader: homepageLoader, },
+      { path: "/:month?", element: <Home />, loader: homepageLoader, },
       { path: "/new", element: <CreateGame />, loader: createGameLoader },
       { path: "/game", element: <Game /> },
       { path: "/result", element: <GameResult /> },
