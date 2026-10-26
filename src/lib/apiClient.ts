@@ -1,6 +1,17 @@
+import { redirect } from "react-router";
 import { refreshSession } from "../api/auth";
 import type { ApiResponse } from "../types/ApiReponse";
 import { baseFetch } from "./baseFetch";
+
+export class ApiError extends Error {
+  status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
 
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -28,7 +39,8 @@ export async function apiFetch<T>(
     const refreshed = await refreshSession();
 
     if (!refreshed) {
-      throw new Error("Session expired");
+      // Loaders follow this redirect automatically; event handlers must catch it
+      throw redirect("/login");
     }
 
     response = await baseFetch(endpoint, {
@@ -46,8 +58,10 @@ export async function apiFetch<T>(
     try {
       const errorData = await response.json();
       message = errorData.detail || message;
-    } catch {}
-    throw new Error(message);
+    } catch {
+      // Response body is not JSON, keep the default message
+    }
+    throw new ApiError(status, message);
   }
 
   const data: T = await response.json();

@@ -1,5 +1,5 @@
-import React, { useState, type ChangeEvent } from "react";
-import { useNavigate } from "react-router";
+import React, { type ChangeEvent } from "react";
+import { useNavigate, useParams } from "react-router";
 
 interface MonthPickerProps {
   minDate: string;
@@ -28,40 +28,46 @@ function parseDate(date: string) {
   return new Date(year, month - 1, 1); // month is 0-indexed
 }
 
+function formatMonth(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+}
+
 const MonthPicker: React.FC<MonthPickerProps> = ({ minDate, maxDate, onChange }) => {
   const navigate = useNavigate()
+  const { month } = useParams()
+
   // If there are no played games then there is also no min/max date
   if(minDate == null || maxDate == null){
-    return <></>
+    return null
   }
 
-  const months = generateMonths(parseDate(minDate), parseDate(maxDate));
-  const [selectedMonth, setSelectedMonth] = useState<Date>(months.at(-1) || months[0]);
+  // Same fallback as homepageLoader: no (valid) month in the URL means the current month
+  const now = new Date();
+  const selectedMonth = month && /^\d{4}-\d{2}$/.test(month)
+    ? parseDate(month)
+    : new Date(now.getFullYear(), now.getMonth(), 1);
+
+  // Always include the selected month, even when it has no games
+  const min = parseDate(minDate);
+  const max = parseDate(maxDate);
+  const months = generateMonths(
+    selectedMonth < min ? selectedMonth : min,
+    selectedMonth > max ? selectedMonth : max,
+  );
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const [yearStr, monthStr] = e.target.value.split("-");
-    const year = parseInt(yearStr, 10);
-    const month = parseInt(monthStr, 10);
-    const newDate = new Date(year, month, 1);
-    setSelectedMonth(newDate);
-    onChange?.(newDate);
-
-    const yyyy = newDate.getFullYear();
-    const mm = String(newDate.getMonth() + 1).padStart(2, "0");
-    navigate(`/${yyyy}-${mm}`);
+    onChange?.(parseDate(e.target.value));
+    navigate(`/${e.target.value}`);
   };
 
   return (
     <select
-      value={`${selectedMonth.getFullYear()}-${selectedMonth.getMonth()}`}
+      value={formatMonth(selectedMonth)}
       onChange={handleChange}
       className="outline-none capitalize"
     >
       {months.map((date) => (
-        <option
-          key={`${date.getFullYear()}-${date.getMonth()}`}
-          value={`${date.getFullYear()}-${date.getMonth()}`}
-        >
+        <option key={formatMonth(date)} value={formatMonth(date)}>
           {capitalizeFirstLetter(date.toLocaleString("nl-NL", { month: "long", year: "numeric" }))}
         </option>
       ))}

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, type SubmitEvent } from "react";
 import { useLoaderData, useLocation, useNavigate } from "react-router";
 import { playerApi } from "../api/player";
+import { ApiError } from "../lib/apiClient";
 import Heading from "../components/Heading";
 import Modal from "../components/Modal";
 import type Player from "../types/Player";
@@ -15,6 +16,7 @@ function CreateGame(){
     const [selectedPlayers, setSelectedPlayers] = useState<string[]>(location.state?.players || []);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [newPlayerName, setNewPlayerName] = useState<string>("");
+    const [error, setError] = useState<string | null>(null);
 
     const hasEnoughPlayers = selectedPlayers.length >= 2;
 
@@ -28,34 +30,33 @@ function CreateGame(){
     };
   
 
-    const handleNewPlayer = async (e: any) => {
+    const closeModal = () => {
+        setIsModalOpen(false)
+        setNewPlayerName("")
+        setError(null)
+    }
+
+    const handleNewPlayer = async (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         try {
             const response = await playerApi.createPlayer(newPlayerName)
-
-            if (response.status == 400) {
-                // setError("Onjuiste credentials")
-                throw new Error("Add failed");
-            }
-
-            if (!response.ok) {
-                // setError("Login faalde om onbekende reden")
-                throw new Error("Add failed");
-            }
-
-            const name = await response.data.name
+            const name = response.data.name
 
             // Add new player and also make him selected
             setPlayers(players => [...players, name]);
             setSelectedPlayers(selectedPlayers => [...selectedPlayers, name]);
-            // Reset values
-            setIsModalOpen(false)
-            setNewPlayerName("")
+            closeModal()
 
-        } catch (err: any) {
-            throw new Error("Onbekende error")
-            console.error(err);
+        } catch (err) {
+            if (err instanceof Response) {
+                navigate("/login");
+            } else if (err instanceof ApiError && err.status === 400) {
+                setError("Ongeldige naam of speler bestaat al");
+            } else {
+                console.error(err);
+                setError("Toevoegen mislukt, probeer het opnieuw");
+            }
         }
     }
 
@@ -63,7 +64,7 @@ function CreateGame(){
         <>
           <Heading text="Nieuw spel" subtitle='Selecteer spelers'/>
           <ul className="grid grid-cols-2 gap-4">
-            {players.sort().map((player) => (
+            {[...players].sort().map((player) => (
             <li key={player} className={`p-4 rounded-2xl cursor-pointer transition-all overflow-hidden
                 ${selectedPlayers.includes(player)
                     ? "bg-emerald-500 text-white"
@@ -100,10 +101,7 @@ function CreateGame(){
           <Modal 
             title="Voeg speler toe"
             isOpen={isModalOpen} 
-            onClose={() => {
-              setIsModalOpen(false)
-              setNewPlayerName("")
-            }}>
+            onClose={closeModal}>
             <form onSubmit={handleNewPlayer}>
               <input
                 type="username"
@@ -116,6 +114,7 @@ function CreateGame(){
                 autoCorrect="none"
                 spellCheck="false"
               />
+              {error && <p className="text-red-500 -mt-6 mb-4 ml-2">{error}</p>}
               <button type="submit" className="bg-emerald-500 p-3 w-full rounded-xl text-white cursor-pointer">Voeg toe</button>
             </form>
           </Modal>

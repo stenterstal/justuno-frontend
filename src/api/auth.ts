@@ -33,8 +33,7 @@ export async function login(username: string, password: string): Promise<boolean
 }
 
 export async function logout() {
-  await fetch("/auth/logout/", {
+  await baseFetch("/auth/logout/", {
     method: "POST",
-    credentials: "include",
   });
 }

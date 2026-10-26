@@ -9,6 +9,7 @@ import { createGameLoader } from './loaders/createGameLoader.ts';
 import { homepageLoader } from './loaders/homepageLoader.ts';
 import { playerLoader } from './loaders/playerLoader.ts';
 import CreateGame from './pages/CreateGame.tsx';
+import ErrorPage from './pages/ErrorPage.tsx';
 import Game from './pages/Game.tsx';
 import GameResult from './pages/GameResult.tsx';
 import Home from './pages/Home.tsx';
@@ -22,19 +23,30 @@ const router = createBrowserRouter([
   {
     element: <Layout />,
     loader: redirectIfAuthenticated,
-    children: [{ path: "/login", element: <Login /> }],
+    children: [
+      {
+        errorElement: <ErrorPage />,
+        children: [{ path: "/login", element: <Login /> }],
+      },
+    ],
   },
   // protected routes
   {
     element: <Layout />,
     loader: requireAuth,
     children: [
-      { path: "/:month?", element: <Home />, loader: homepageLoader, },
-      { path: "/new", element: <CreateGame />, loader: createGameLoader },
-      { path: "/game", element: <Game /> },
-      { path: "/result", element: <GameResult /> },
-      { path: "/info", element: <ScoreInfo /> },
-      { path: "/user/:id", element: <Player />, loader: playerLoader },
+      {
+        // Pathless route so errors render inside the Layout (header stays visible)
+        errorElement: <ErrorPage />,
+        children: [
+          { path: "/:month?", element: <Home />, loader: homepageLoader, },
+          { path: "/new", element: <CreateGame />, loader: createGameLoader },
+          { path: "/game", element: <Game /> },
+          { path: "/result", element: <GameResult /> },
+          { path: "/info", element: <ScoreInfo /> },
+          { path: "/user/:id", element: <Player />, loader: playerLoader },
+        ],
+      },
     ],
   },
 ]);

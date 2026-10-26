@@ -11,7 +11,7 @@ export default function Scorecard({player, games_played, games_won, final_score,
 
     return (
         <div className={`p-4 md:p-5 mb-4 rounded-2xl bg-white flex items-center border-l-8 ${borderColorClass} cursor-pointer`}
-            onClick={() => navigate('/user/'+player)}>
+            onClick={() => navigate('/user/' + encodeURIComponent(player))}>
             <div className="flex items-center flex-1 min-w-0 text-wrap overflow-hidden text-ellipsis">
                 <p className="pr-2 md:text-xl">{position}</p>
                 <h1 className="text-2xl md:text-3xl pr-6">{player}</h1>

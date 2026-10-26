@@ -7,6 +7,5 @@ export async function playerLoader({params}: LoaderFunctionArgs): Promise<Player
     const id = params.id
     if (!id) throw new Response("Player ID not found", { status: 404 });
     const response = await playerApi.getPlayerGames(id);
-    if (!response.ok) throw new Response("Failed to fetch players", { status: 500 });
     return response.data;
 }
