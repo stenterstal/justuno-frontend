@@ -5,6 +5,7 @@ import { playerApi } from "../api/player";
 import { ApiError } from "../lib/apiClient";
 import Heading from "../components/Heading";
 import Modal from "../components/Modal";
+import { useKeyboardInset } from "../hooks/useKeyboardInset";
 
 
 function CreateGame(){
@@ -20,6 +21,7 @@ function CreateGame(){
     const [error, setError] = useState<string | null>(null);
 
     const hasEnoughPlayers = selectedPlayers.length >= 2;
+    const keyboardInset = useKeyboardInset();
 
     const query = search.trim().toLowerCase();
     const visiblePlayers = [...players]
@@ -141,7 +143,9 @@ function CreateGame(){
             }
           </ul>
 
-          <div className="w-full h-15 md:h-20 fixed bottom-0 left-0 right-0 bg-slate-100 flex shadow-[0_-2px_8px_rgba(0,0,0,0.08)]">
+          {/* Kept on top of the phone keyboard instead of behind it */}
+          <div className="w-full h-15 md:h-20 fixed bottom-0 left-0 right-0 bg-slate-100 flex shadow-[0_-2px_8px_rgba(0,0,0,0.08)]"
+            style={{ bottom: keyboardInset }}>
             <div className="flex flex-1 max-w-4xl mx-auto">
               <button className="flex flex-1 items-center gap-2 pl-8 cursor-pointer"
                 onClick={() => openModal()}>
