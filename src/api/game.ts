@@ -23,6 +23,12 @@ type CreateGameResponse = {
   leaderboard_mutations: LeaderboardMutation[];
 };
 
+export async function getLatestGamePlayers(): Promise<string[]> {
+  const res = await apiFetch<{ players: string[] }>("/games/latest/", { method: "GET" });
+
+  return res.data.players;
+}
+
 export function useGameApi() {
   const createGame = (
     payload: CreateGamePayload

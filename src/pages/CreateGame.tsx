@@ -1,16 +1,16 @@
 import { useState, type SubmitEvent } from "react";
 import { useLoaderData, useLocation, useNavigate } from "react-router";
+import type { CreateGameData } from "../loaders/createGameLoader";
 import { playerApi } from "../api/player";
 import { ApiError } from "../lib/apiClient";
 import Heading from "../components/Heading";
 import Modal from "../components/Modal";
-import type Player from "../types/Player";
 
 
 function CreateGame(){
     const navigate = useNavigate();
     const location = useLocation();
-    const loadedPlayers = useLoaderData() as Player[];
+    const { players: loadedPlayers, previousPlayers } = useLoaderData() as CreateGameData;
 
     const [players, setPlayers] = useState<string[]>(loadedPlayers.map((p) => p.name))
     const [selectedPlayers, setSelectedPlayers] = useState<string[]>(location.state?.players || []);
@@ -29,6 +29,10 @@ function CreateGame(){
       );
     };
   
+
+    const selectPreviousPlayers = () => {
+      setSelectedPlayers(previousPlayers.filter((name) => players.includes(name)));
+    };
 
     const closeModal = () => {
         setIsModalOpen(false)
@@ -62,7 +66,15 @@ function CreateGame(){
 
     return (
         <>
-          <Heading text="Nieuw spel" subtitle='Selecteer spelers'/>
+          <Heading text="Nieuw spel" subtitle='Selecteer spelers' endText={
+            previousPlayers.length > 0 &&
+              <button className="flex items-center gap-1 mr-2 md:mr-4 cursor-pointer" onClick={selectPreviousPlayers}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                </svg>
+                <p>Vorige spelers</p>
+              </button>
+          }/>
           <ul className="grid grid-cols-2 gap-4">
             {[...players].sort().map((player) => (
             <li key={player} className={`p-4 rounded-2xl cursor-pointer transition-all overflow-hidden
