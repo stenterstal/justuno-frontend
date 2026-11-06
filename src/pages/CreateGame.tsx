@@ -1,4 +1,4 @@
-import { useState, type SubmitEvent } from "react";
+import { useState, type KeyboardEvent, type SubmitEvent } from "react";
 import { useLoaderData, useLocation, useNavigate } from "react-router";
 import type { CreateGameData } from "../loaders/createGameLoader";
 import { playerApi } from "../api/player";
@@ -14,11 +14,17 @@ function CreateGame(){
 
     const [players, setPlayers] = useState<string[]>(loadedPlayers.map((p) => p.name))
     const [selectedPlayers, setSelectedPlayers] = useState<string[]>(location.state?.players || []);
+    const [search, setSearch] = useState<string>("");
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [newPlayerName, setNewPlayerName] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
 
     const hasEnoughPlayers = selectedPlayers.length >= 2;
+
+    const query = search.trim().toLowerCase();
+    const visiblePlayers = [...players]
+      .sort()
+      .filter((player) => player.toLowerCase().includes(query));
 
 
     const togglePlayer = (playerName: string) => {
@@ -28,11 +34,32 @@ function CreateGame(){
           : [...prevSelected, playerName]
       );
     };
-  
+
+    // Tapping a match also clears the search, so the next name can be typed right away
+    const handlePlayerClick = (playerName: string) => {
+      togglePlayer(playerName);
+      if (query) setSearch("");
+    };
+
+    // Enter toggles the first match, so names can be typed one after another
+    const handleSearchKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.key !== "Enter" || !query) return;
+      e.preventDefault();
+
+      if (visiblePlayers.length > 0) {
+        togglePlayer(visiblePlayers[0]);
+        setSearch("");
+      }
+    };
 
     const selectPreviousPlayers = () => {
       setSelectedPlayers(previousPlayers.filter((name) => players.includes(name)));
     };
+
+    const openModal = (name: string = "") => {
+        setNewPlayerName(name)
+        setIsModalOpen(true)
+    }
 
     const closeModal = () => {
         setIsModalOpen(false)
@@ -50,6 +77,7 @@ function CreateGame(){
             // Add new player and also make him selected
             setPlayers(players => [...players, name]);
             setSelectedPlayers(selectedPlayers => [...selectedPlayers, name]);
+            setSearch("");
             closeModal()
 
         } catch (err) {
@@ -75,44 +103,69 @@ function CreateGame(){
                 <p>Vorige spelers</p>
               </button>
           }/>
-          <ul className="grid grid-cols-2 gap-4">
-            {[...players].sort().map((player) => (
+          <div className="relative mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+              <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>
+            <input
+              type="search"
+              className="bg-white p-4 pl-12 rounded-2xl w-full outline-none"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={handleSearchKeyDown}
+              placeholder="Zoek speler"
+              autoComplete="off"
+              autoCorrect="off"
+              spellCheck="false"
+            />
+          </div>
+          <ul className="flex flex-col gap-3 mb-20 md:mb-24">
+            {visiblePlayers.map((player) => (
             <li key={player} className={`p-4 rounded-2xl cursor-pointer transition-all overflow-hidden
                 ${selectedPlayers.includes(player)
                     ? "bg-emerald-500 text-white"
                     : "bg-white text-black"
                 }`
             }
-                onClick={() => togglePlayer(player)}>
+                // Keep focus (and the phone keyboard) on the search box while selecting
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => handlePlayerClick(player)}>
                 <p className="text-xl">{player}</p>
             </li>
             ))}
+            {query && visiblePlayers.length === 0 &&
+              <li className="p-4 rounded-2xl cursor-pointer bg-slate-100 text-gray-600"
+                onClick={() => openModal(search.trim())}>
+                <p className="text-xl">Voeg "{search.trim()}" toe</p>
+              </li>
+            }
           </ul>
-          <div className="grid grid-cols-2 gap-4 mt-8">
-            <button className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white p-4 pl-6 rounded-2xl cursor-pointer transition-all items-center gap-1 flex justify-center"
-              onClick={() => setIsModalOpen(true)}>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 -ml-2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
+
+          <div className="w-full h-15 md:h-20 fixed bottom-0 left-0 right-0 bg-slate-100 flex shadow-[0_-2px_8px_rgba(0,0,0,0.08)]">
+            <div className="flex flex-1 max-w-4xl mx-auto">
+              <button className="flex flex-1 items-center gap-2 pl-8 cursor-pointer"
+                onClick={() => openModal()}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
                 </svg>
-                <p className="text-xl">
-                  Voeg toe
-                </p>
-            </button>
-            <button 
-              disabled={!hasEnoughPlayers}
-              onClick={() => navigate('/game', {state: {selectedPlayers}})}
-              className={`flex-1 p4 py-4 text-xl rounded-2xl transition-all ${
-                hasEnoughPlayers
-                  ? "bg-emerald-500 text-white hover:bg-emerald-600"
-                  : "bg-gray-300 text-gray-600 cursor-not-allowed"
-              }`}>
-              Start
-            </button>
+                Voeg toe
+              </button>
+              <button
+                disabled={!hasEnoughPlayers}
+                onClick={() => navigate('/game', {state: {selectedPlayers}})}
+                className={`px-8 h-full transition-all ${
+                  hasEnoughPlayers
+                    ? "bg-emerald-500 hover:bg-emerald-600 text-white cursor-pointer"
+                    : "bg-gray-300 text-gray-600 cursor-not-allowed"
+                }`}>
+                Start ({selectedPlayers.length})
+              </button>
+            </div>
           </div>
 
-          <Modal 
+          <Modal
             title="Voeg speler toe"
-            isOpen={isModalOpen} 
+            isOpen={isModalOpen}
             onClose={closeModal}>
             <form onSubmit={handleNewPlayer}>
               <input

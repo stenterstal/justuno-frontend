@@ -5,7 +5,7 @@ export default function BottomBar(dates: {min: string, max: string}){
     const navigate = useNavigate()
 
     return (
-        <div className="w-full h-15 md:h-20 fixed bottom-0 left-0 right-0 bg-slate-100 flex">
+        <div className="w-full h-15 md:h-20 fixed bottom-0 left-0 right-0 bg-slate-100 flex shadow-[0_-2px_8px_rgba(0,0,0,0.08)]">
             <div className="flex flex-1 relative max-w-4xl mx-auto">
                 {dates && <div className="flex flex-1 pl-8"><MonthPicker minDate={dates.min} maxDate={dates.max}/></div>}
                 {/* <input type="month" id="start" name="start" min="2018-03" defaultValue="2018-05" className="flex-1 pl-8 outline-none" /> */}
