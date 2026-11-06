@@ -9,7 +9,7 @@ export const playerApi = {
   },
 
   getPlayerGames(name: string): Promise<ApiResponse<PlayerGame[]>> {
-    return apiFetch<PlayerGame[]>(`/games/${encodeURIComponent(name)}`, { method: "GET" });
+    return apiFetch<PlayerGame[]>(`/players/${encodeURIComponent(name)}/games`, { method: "GET" });
   },
 
   createPlayer(name: string): Promise<ApiResponse<Player>> {

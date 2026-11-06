@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useState, type SubmitEvent } from "react";
+import { useNavigate } from "react-router";
 import { login } from "../api/auth";
 import Heading from "../components/Heading";
 
@@ -10,21 +10,30 @@ export default function Login(){
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    const [submitting, setSubmitting] = useState(false);
+
     const navigate = useNavigate();
-    const location = useLocation();
 
-    const from = (location.state as any)?.from?.pathname || "/";
-
-    const handleSubmit = async (e: any) => {
+    const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setSubmitting(true);
+        setError(null);
 
-        login(username, password).then((ok) => {
-            if(ok){
-                navigate(from, { replace: true });
-            } else {
-                 setError("Login failed")
-            }
-        })
+        const status = await login(username, password);
+
+        if (status === 200) {
+            navigate("/", { replace: true });
+            return;
+        }
+
+        if (status === 401) {
+            setError("Onjuiste gebruikersnaam of wachtwoord");
+        } else if (status === 429) {
+            setError("Te veel pogingen, probeer het over een minuut opnieuw");
+        } else {
+            setError("Inloggen mislukt, probeer het opnieuw");
+        }
+        setSubmitting(false);
     };
 
     return(
@@ -32,7 +41,8 @@ export default function Login(){
             <Heading text="Login" className="mb-5"/>
             <form onSubmit={handleSubmit} className="flex flex-col">
             <input
-                type="username"
+                type="text"
+                autoComplete="username"
                 className="bg-slate-100 p-4 rounded-2xl mb-4"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -45,6 +55,7 @@ export default function Login(){
                 <input
                     className="bg-slate-100 p-4 rounded-2xl w-full"
                     type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Wachtwoord"
@@ -67,7 +78,7 @@ export default function Login(){
                 </button>
             </div>
             {error && <p className="text-red-500 mb-4 ml-2">{error}</p>}
-            <button type="submit" className="bg-emerald-500 p-4 rounded-xl text-white cursor-pointer">Login</button>
+            <button type="submit" disabled={submitting} className="bg-emerald-500 p-4 rounded-xl text-white cursor-pointer disabled:opacity-60">Login</button>
             </form>
         </>
     )

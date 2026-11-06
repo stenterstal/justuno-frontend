@@ -104,7 +104,8 @@ function CreateGame(){
             onClose={closeModal}>
             <form onSubmit={handleNewPlayer}>
               <input
-                type="username"
+                type="text"
+                autoComplete="off"
                 className="bg-slate-100 p-4 rounded-2xl mb-8 w-full"
                 value={newPlayerName}
                 onChange={(e) => setNewPlayerName(e.target.value)}

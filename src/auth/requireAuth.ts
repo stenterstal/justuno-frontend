@@ -1,8 +1,8 @@
 import { redirect } from "react-router";
-import { refreshSession } from "../api/auth";
+import { checkSession } from "../api/auth";
 
 export async function requireAuth() {
-  await refreshSession().then((ok) => {
+  await checkSession().then((ok) => {
     if(!ok){
         throw redirect("/login");
     }

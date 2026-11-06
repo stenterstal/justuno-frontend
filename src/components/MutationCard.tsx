@@ -20,10 +20,15 @@ function MutationIcon({ delta }: { delta: number }){
             </svg>)}
 }
 
-function MutationInfo({ delta }: { delta: number }){
+function MutationInfo({ delta }: { delta: number | null }){
+    // No movement to show for players new to this month's ranking
+    if (delta === null || delta === 0) {
+        return <p>-</p>
+    }
+
     return (
         <>
-            <p>{delta === 0 ? "-" : delta}</p>
+            <p>{delta}</p>
             <MutationIcon delta={delta}/>
         </>
     )

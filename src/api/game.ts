@@ -12,9 +12,10 @@ interface CreateGamePayload {
 
 interface LeaderboardMutation {
   player: string;
-  old_position: number;
+  // null when this game is the player's first of the month
+  old_position: number | null;
   new_position: number;
-  delta: number;
+  delta: number | null;
 }
 
 type CreateGameResponse = {
